@@ -1,31 +1,43 @@
-AFRAME.registerComponent('oh-my-gawd', {
-    init: function() {
-        this.inc = 0.5
-        this.cube = document.querySelector('#cat');
-        this.position = this.cube.getAttribute('position');
-        this.hiro = document.querySelector('#marker-hiro');
-        this.kanji = document.querySelector('#marker-kanji');
-        this.alertas = document.querySelector("#void-sector");
+AFRAME.registerComponent('oh-my-gawd', 
+{
+    init: function() 
+    {
+        this.cuboOrigen = document.querySelector('#origen');
+        this.cuboDestino = document.querySelector('#destino');
+
+        this.marcadorHiro = document.querySelector('#marker-hiro');
+        this.marcadorKanji = document.querySelector('#marker-kanji');
+    
+        this.delta = -0.2;
+        this.posicion = this.cuboOrigen.getAttribute('position');
+
+        this.posMarcadorHiro = new THREE.Vector3();
+        this.posMarcadorKanji = new THREE.Vector3();
+
+        this.debug = document.querySelector('#debug');
     },
-    tick: function(time) {
-        if (time - this.time < 33) return; 
-        this.time = time;
-
-        this.position.x = this.position.x + this.inc;
-
-        if (this.position.x >= 10 || this.position.x <= -10)
-            this.inc = -this.inc
-
-        this.cube.setAttribute('position', this.position);
+    tick: function(t) {
+        if (t - this.tiempo < 1000) return; 
+        this.tiempo = t;
         
-        let markerPos1 = new THREE.Vector3();
-        let markerPos2 = new THREE.Vector3();
+        this.marcadorHiro.object3D.getWorldPosition(this.posMarcadorHiro);
+        this.marcadorKanji.object3D.getWorldPosition(this.posMarcadorKanji);
+
+        if (this.posMarcadorKanji.x !== 0 && this.posMarcadorKanji.y !== 0 && this.posMarcadorHiro.x !== 0 && this.posMarcadorHiro.y !== 0)
+        {
+            let m = (this.posMarcadorHiro.y - this.posMarcadorKanji.y) / (this.posMarcadorHiro.x - this.posMarcadorKanji.x);
+            let b = this.posMarcadorHiro.y - m * this.posMarcadorHiro.x;
+            let trayectoria = (x) => { return m * x + b; }
         
-        this.hiro.object3D.getWorldPosition(markerPos1);
-        this.kanji.object3D.getWorldPosition(markerPos2);
+            //this.debug.innerText = `${m}x + ${b}`;
+            this.debug.innerText = `(${this.posMarcadorHiro.x} ${this.posMarcadorHiro.y})\n(${this.posMarcadorKanji.x} ${this.posMarcadorKanji.y})`;
 
-        let distance = markerPos1.distanceTo(markerPos2);
+            this.posicion.x += this.delta;
+            this.posicion.z = trayectoria(this.posicion.x);
 
-        this.alertas.innerText  = `distance: ${distance}`;
+            this.cuboOrigen.setAttribute('position', this.posicion);
+        }
+        //let distance = markerPos1.distanceTo(markerPos2);
+        //console.log(`distance: ${distance}`);
     }
 });
