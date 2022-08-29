@@ -24,9 +24,8 @@ AFRAME.registerComponent('oh-my-gawd', {
         this.hiro.object3D.getWorldPosition(markerPos1);
         this.kanji.object3D.getWorldPosition(markerPos2);
 
-        let hiroLog = `hiro:\nx: ${markerPos1.x}\n y: ${markerPos1.y}\n z: ${markerPos1.z}\n`;
-        let kanjiLog = `kanji:\nx: ${markerPos2.x}\n y: ${markerPos2.y}\n z: ${markerPos2.z}\n`;
+        let distance = markerPos1.distanceTo(markerPos2);
 
-        this.alertas.innerText  = hiroLog + '\n' + kanjiLog;
+        this.alertas.innerText  = `distance: ${distance}`;
     }
 });
