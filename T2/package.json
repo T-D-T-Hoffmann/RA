@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/aframe": "^1.2.0",
+    "@types/three": "^0.143.1",
+    "live-server": "^1.2.2",
+    "live-server-https": "^0.0.2"
+  }
+}
