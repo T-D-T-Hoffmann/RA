@@ -2,27 +2,21 @@
 <html lang="es">
     <head>
         <meta charset="utf-8">
-        <title>The RA Tarea XD</title>
-        <script src="lib/aframe.js"></script>
-        <script src="src/main.js"></script>
-        <!--script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script-->
+        <title>Tarea 2</title>
+        <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
         <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+        <script src="src/main.js"></script>
     </head>
     <body>
-        <p id="debug" style="position: absolute; color: #FF0000; z-index: 1000; top: 0px; left: 0px;">
-            xenex
-        </p>
+        <p id="debug" style="position: absolute; color: #FF0000; z-index: 1000; top: 0px; left: 0px;"></p>
         <a-scene embedded arjs>
-        <!--a-scene-->
-            <!--a-box id="cat" position="0  0 -5" rotation="0 0 0" color="#FF0000"></a-box-->
-            <a-marker id="hiro" preset="hiro">
+            <a-marker id="marcador-sol" preset="hiro">
                 <a-sphere id="sol" position="0 0 0" scale="0.5 0.5 0.5" color="#ffa200"></a-sphere>
             </a-marker>
-            <a-marker id="kanji" preset="kanji">
-                <a-sphere id="luna" position="0 0 0" scale="0.1 0.1, 0.1", color="#222"></a-sphere>
+            <a-marker id="marcador-planeta" preset="kanji">
+                <a-sphere id="planeta" position="0 0 0" scale="0.1 0.1, 0.1", color="#004669"></a-sphere>
             </a-marker>
             <a-entity camera></a-entity>
-            <a-entity event></a-entity>
         </a-scene>
     </body>
 </html>
