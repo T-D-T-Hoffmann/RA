@@ -1,63 +1,35 @@
-AFRAME.registerComponent('event', 
+window.onload = function () 
 {
-    init: function() 
-    {
-        this.sol = document.querySelector('#sol');
-        this.luna = document.querySelector('#luna');
-        this.rotation = 0.0;
+    let marcadorSol = document.querySelector('#marcador-sol');
+    let marcadorPlaneta = document.querySelector('#marcador-planeta');
 
-        let marcadorSol = document.querySelector('#hiro');
-        let marcadorLuna = document.querySelector('#kanji');
+    let planeta = document.querySelector('#planeta');
 
-        this.posMarcadorSol = marcadorSol.object3D.position;
-        this.posMarcadorLuna = marcadorLuna.object3D.position;
+    let marcadorSolDetectado = false;
+    let marcadorLunaDetectado = false;
+    let angulo = 0.0;
 
-        this.debug = document.querySelector('#debug');
+    marcadorSol.addEventListener('markerFound',     () => { marcadorSolDetectado  = true;  });
+    marcadorSol.addEventListener('markerLost',      () => { marcadorSolDetectado  = false; });
+    marcadorPlaneta.addEventListener('markerFound', () => { marcadorLunaDetectado = true;  });
+    marcadorPlaneta.addEventListener('markerLost',  () => { marcadorLunaDetectado = false; });
 
-        this.origenDetectado = false;
-        this.destinoDetectado = false;
-
-        marcadorSol.addEventListener('markerFound', () => {
-            this.origenDetectado = true;
-        });
-
-        marcadorSol.addEventListener('markerLost', () => {
-            this.origenDetectado = false;
-        });
-
-        marcadorLuna.addEventListener('markerFound', () => {
-            this.destinoDetectado = true;
-        });
-
-        marcadorLuna.addEventListener('markerLost', () => {
-            this.destinoDetectado = false;
-        });
-    },
-    tick: function(t) 
-    {
-        if (t - this.t < 33) return; 
-        this.t = t;
-
-        if ((this.origenDetectado && this.destinoDetectado) === true)
+    setInterval(() => {
+        
+        if ((marcadorSolDetectado && marcadorLunaDetectado) === true)
         {
-            let posSol  = this.posMarcadorSol;
-            let posLuna = this.posMarcadorLuna;
-
-            let a = `${posSol.x.toFixed(2)}, ${posSol.y.toFixed(2)}`;
-            let b = `${posLuna.x.toFixed(2)}, ${posLuna.y.toFixed(2)}`;
+            let radio = marcadorSol.object3D.position.distanceTo(marcadorPlaneta.object3D.position);
             
-            let r = posSol.distanceTo(posLuna)
+            planeta.object3D.position.x = radio * Math.cos(angulo) - radio;
+            planeta.object3D.position.z = radio * Math.sin(angulo);
 
-            this.luna.object3D.position.x = r*Math.cos(this.rotation) + posSol.x;
-            this.luna.object3D.position.y = r*Math.sin(this.rotation) + posSol.y;
-
-            this.rotation = (this.rotation + 0.05) % (2*Math.PI);
-
-            this.debug.innerText = `Sol: ${a}\nLuna: ${b}\nRadio: ${r}`;
+            angulo = (angulo + 0.05) % (2 * Math.PI);
         }
         else
         {
-            this.debug.innerText = 'No se detectó ni mergas';
+            planeta.object3D.position.x = 0;
+            planeta.object3D.position.z = 0
         }
-    }
-});
+
+    }, 33);
+}
