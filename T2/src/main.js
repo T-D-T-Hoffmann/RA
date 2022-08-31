@@ -1,43 +1,63 @@
-AFRAME.registerComponent('oh-my-gawd', 
+AFRAME.registerComponent('event', 
 {
     init: function() 
     {
-        this.cuboOrigen = document.querySelector('#origen');
-        this.cuboDestino = document.querySelector('#destino');
+        this.sol = document.querySelector('#sol');
+        this.luna = document.querySelector('#luna');
+        this.rotation = 0.0;
 
-        this.marcadorHiro = document.querySelector('#marker-hiro');
-        this.marcadorKanji = document.querySelector('#marker-kanji');
-    
-        this.delta = -0.2;
-        this.posicion = this.cuboOrigen.getAttribute('position');
+        let marcadorSol = document.querySelector('#hiro');
+        let marcadorLuna = document.querySelector('#kanji');
 
-        this.posMarcadorHiro = new THREE.Vector3();
-        this.posMarcadorKanji = new THREE.Vector3();
+        this.posMarcadorSol = marcadorSol.object3D.position;
+        this.posMarcadorLuna = marcadorLuna.object3D.position;
 
         this.debug = document.querySelector('#debug');
+
+        this.origenDetectado = false;
+        this.destinoDetectado = false;
+
+        marcadorSol.addEventListener('markerFound', () => {
+            this.origenDetectado = true;
+        });
+
+        marcadorSol.addEventListener('markerLost', () => {
+            this.origenDetectado = false;
+        });
+
+        marcadorLuna.addEventListener('markerFound', () => {
+            this.destinoDetectado = true;
+        });
+
+        marcadorLuna.addEventListener('markerLost', () => {
+            this.destinoDetectado = false;
+        });
     },
-    tick: function(t) {
-        if (t - this.tiempo < 1000) return; 
-        this.tiempo = t;
-        
-        this.marcadorHiro.object3D.getWorldPosition(this.posMarcadorHiro);
-        this.marcadorKanji.object3D.getWorldPosition(this.posMarcadorKanji);
+    tick: function(t) 
+    {
+        if (t - this.t < 33) return; 
+        this.t = t;
 
-        if (this.posMarcadorKanji.x !== 0 && this.posMarcadorKanji.y !== 0 && this.posMarcadorHiro.x !== 0 && this.posMarcadorHiro.y !== 0)
+        if ((this.origenDetectado && this.destinoDetectado) === true)
         {
-            let m = (this.posMarcadorHiro.y - this.posMarcadorKanji.y) / (this.posMarcadorHiro.x - this.posMarcadorKanji.x);
-            let b = this.posMarcadorHiro.y - m * this.posMarcadorHiro.x;
-            let trayectoria = (x) => { return m * x + b; }
-        
-            //this.debug.innerText = `${m}x + ${b}`;
-            this.debug.innerText = `(${this.posMarcadorHiro.x} ${this.posMarcadorHiro.y})\n(${this.posMarcadorKanji.x} ${this.posMarcadorKanji.y})`;
+            let posSol  = this.posMarcadorSol;
+            let posLuna = this.posMarcadorLuna;
 
-            this.posicion.x += this.delta;
-            this.posicion.z = trayectoria(this.posicion.x);
+            let a = `${posSol.x.toFixed(2)}, ${posSol.y.toFixed(2)}`;
+            let b = `${posLuna.x.toFixed(2)}, ${posLuna.y.toFixed(2)}`;
+            
+            let r = posSol.distanceTo(posLuna)
 
-            this.cuboOrigen.setAttribute('position', this.posicion);
+            this.luna.object3D.position.x = r*Math.cos(this.rotation) + posSol.x;
+            this.luna.object3D.position.y = r*Math.sin(this.rotation) + posSol.y;
+
+            this.rotation = (this.rotation + 0.05) % (2*Math.PI);
+
+            this.debug.innerText = `Sol: ${a}\nLuna: ${b}\nRadio: ${r}`;
         }
-        //let distance = markerPos1.distanceTo(markerPos2);
-        //console.log(`distance: ${distance}`);
+        else
+        {
+            this.debug.innerText = 'No se detectó ni mergas';
+        }
     }
 });
