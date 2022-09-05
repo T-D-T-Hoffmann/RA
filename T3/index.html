@@ -8,15 +8,16 @@
         <script src="src/main.js"></script>
     </head>
     <body>
-        <p id="debug" style="position: absolute; color: #FF0000; z-index: 1000; top: 0px; left: 0px;"></p>
-        <a-scene embedded arjs>
+        <a-scene embedded arjs main>
             <a-marker id="marcador-sol" preset="hiro">
-                <a-sphere id="sol" position="0 0 0" scale="0.5 0.5 0.5" color="#ffa200"></a-sphere>
+                <a-sphere id="sol" src="textures/2k_sun.jpg" position="0 0 0" scale="0.5 0.5 0.5"></a-sphere>
             </a-marker>
-            <a-marker id="marcador-cometa" preset="kanji">
-                <a-sphere id="planeta" position="0 0 0" scale="0.1 0.1, 0.1", color="#004669"></a-sphere>
+            <a-marker id="marcador-planeta" preset="kanji">
+                <a-sphere id="planeta" src="textures/2k_earth.jpg" position="0 0 0" scale="0.1 0.1, 0.1"></a-sphere>
+                <a-sphere id="luna" src="textures/2k_moon.jpg" position="0.4 0 0" scale="0.05 0.05 0.05"></a-sphere>
             </a-marker>
             <a-entity camera></a-entity>
         </a-scene>
+        <p id="debug" style="color: #FF0000; position: absolute; top: 0; left: 0;">pop</p>
     </body>
 </html>
